@@ -10,13 +10,14 @@ import java.util.Stack;
  */
 public class StorageTube {
 
-    public final int MAXIMUM_CAPACITY = 4;
+    public final int MAXIMUM_CAPACITY;
     public Stack<MailItem> tube;
 
     /**
      * Constructor for the storage tube
      */
-    public StorageTube(){
+    public StorageTube(int maxCap){
+    	this.MAXIMUM_CAPACITY = maxCap;
         this.tube = new Stack<MailItem>();
     }
 

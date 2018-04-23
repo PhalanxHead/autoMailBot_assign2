@@ -40,7 +40,8 @@ public class Robot {
         // current_state = RobotState.WAITING;
     	current_state = RobotState.RETURNING;
         current_floor = Building.MAILROOM_LOCATION;
-        tube = new StorageTube();
+        /* Need to make this more extensible */
+        tube = new StorageTube(Integer.parseInt(Simulation.amProperties.getProperty("Std_TubeSize")));
         this.behaviour = behaviour;
         this.delivery = delivery;
         this.mailPool = mailPool;

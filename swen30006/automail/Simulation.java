@@ -5,6 +5,7 @@ import exceptions.ItemTooHeavyException;
 import exceptions.MailAlreadyDeliveredException;
 import strategies.Automail;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,46 +18,46 @@ import java.util.Properties;
 public class Simulation {
 
     /** Constant for the mail generator */
-    private static final int MAIL_TO_CREATE = 180;
-    
-
+    private static int MAIL_TO_CREATE;
     private static ArrayList<MailItem> MAIL_DELIVERED;
     private static double total_score = 0;
 
-    public static void main(String[] args) { //throws IOException {
- /*   	// Should probably be using properties here
-    	Properties automailProperties = new Properties();
-		// Defaults
-		automailProperties.setProperty("Name_of_Property", "20");  // Property value may need to be converted from a string to the appropriate type
+	public static Properties amProperties;
+    
+    public static void main(String[] args) throws IOException {
 
+    	/* Instantiate Properties */
+    	amProperties = new Properties();
 		FileReader inStream = null;
 		
 		try {
 			inStream = new FileReader("automail.properties");
-			automailProperties.load(inStream);
+			amProperties.load(inStream);
+			
+		/* No File? */
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+			System.err.printf("ERROR: Properties File not found!");
+			
+		/* Something worrisome this way comes*/
+		} catch(Exception e) {
+			e.printStackTrace();
+			System.err.printf("ERROR: Something is wrong");
+			
 		} finally {
 			 if (inStream != null) {
 	                inStream.close();
-	            }
+            }
 		}
-		
-		int i = Integer.parseInt(automailProperties.getProperty("Name_of_Property"));
-*/
+
 
         MAIL_DELIVERED = new ArrayList<MailItem>();
-                
-        /** Used to see whether a seed is initialized or not */
-        HashMap<Boolean, Integer> seedMap = new HashMap<>();
-        
-        /** Read the first argument and save it as a seed if it exists */
-        if(args.length != 0){
-        	int seed = Integer.parseInt(args[0]);
-        	seedMap.put(true, seed);
-        } else{
-        	seedMap.put(false, 0);
-        }
+       
+        /* Removed seedMap as was wasteful  */
+    	
         Automail automail = new Automail(new ReportDelivery());
-        MailGenerator generator = new MailGenerator(MAIL_TO_CREATE, automail.mailPool, seedMap);
+        MAIL_TO_CREATE = Integer.parseInt(amProperties.getProperty("Mail_to_Create"));
+        MailGenerator generator = new MailGenerator(MAIL_TO_CREATE, automail.mailPool);
         
         /** Initiate all the mail */
         generator.generateAllMail();
@@ -104,7 +105,7 @@ public class Simulation {
     
     private static double calculateDeliveryScore(MailItem deliveryItem) {
     	// Penalty for longer delivery times
-    	final double penalty = 1.1;
+    	final double penalty = Double.parseDouble(amProperties.getProperty("Delivery_Penalty"));
     	double priority_weight = 0;
         // Take (delivery time - arrivalTime)**penalty * (1+sqrt(priority_weight))
     	if(deliveryItem instanceof PriorityMailItem){

@@ -11,10 +11,13 @@ import strategies.IMailPool;
 public class MailGenerator {
 
     public final int MAIL_TO_CREATE;
+    /* Don't think the Mail Variance needs to be changeable via properties */
+    public final int MAIL_VAR1 = 4/5;
+    public final int MAIL_VAR2 = 2/5;
 
     private int mailCreated;
 
-    private final Random random;
+    private Random random;
     /** This seed is used to make the behaviour deterministic */
     
     private boolean complete;
@@ -28,15 +31,19 @@ public class MailGenerator {
      * @param mailPool where mail items go on arrival
      * @param seed random seed for generating mail
      */
-    public MailGenerator(int mailToCreate, IMailPool mailPool, HashMap<Boolean,Integer> seed){
-        if(seed.containsKey(true)){
-        	this.random = new Random((long) seed.get(true));
-        }
-        else{
-        	this.random = new Random();	
-        }
+    public MailGenerator(int mailToCreate, IMailPool mailPool){
+    	/* I don't particularly like this solution, but it works. */
+    	try {
+    		this.random = new Random(
+    				Long.parseLong(Simulation.amProperties.getProperty("Seed")) );
+    		
+    	} catch(Exception e) {
+    		
+    		this.random = new Random();
+    	}
+        
         // Vary arriving mail by +/-20%
-        MAIL_TO_CREATE = mailToCreate*4/5 + random.nextInt(mailToCreate*2/5);
+        MAIL_TO_CREATE = mailToCreate*MAIL_VAR1 + random.nextInt(mailToCreate*MAIL_VAR2);
         // System.out.println("Num Mail Items: "+MAIL_TO_CREATE);
         mailCreated = 0;
         complete = false;
@@ -74,19 +81,23 @@ public class MailGenerator {
      * @return a random priority level selected from 10 and 100
      */
     private int generatePriorityLevel(){
-        return random.nextInt(4) > 0 ? 10 : 100;
+    	final Integer LOW_PRI = Integer.parseInt(Simulation.amProperties.getProperty("Low_Priority"));
+    	final Integer HI_PRI = Integer.parseInt(Simulation.amProperties.getProperty("High_Priority"));
+    	
+        return random.nextInt(4) > 0 ? LOW_PRI : HI_PRI;
     }
     
     /**
      * @return a random weight
      */
     private int generateWeight(){
-    	final double mean = 200.0; // grams for normal item
-    	final double stddev = 700.0; // grams
+    	final double mean = Double.parseDouble(Simulation.amProperties.getProperty("Normal_Weight"));
+    	final double stddev = Double.parseDouble(Simulation.amProperties.getProperty("Weight_Stdev"));
+    	final int MAX = Integer.parseInt(Simulation.amProperties.getProperty("Weight_Max"));
     	double base = random.nextGaussian();
     	if (base < 0) base = -base;
     	int weight = (int) (mean + base * stddev);
-        return weight > 5000 ? 5000 : weight;
+        return weight > MAX ? MAX : weight;
     }
     
     /**
