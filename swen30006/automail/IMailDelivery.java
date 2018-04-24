@@ -10,5 +10,11 @@ public interface IMailDelivery {
      * @param mailItem the mail item being delivered.
      */
 	void deliver(MailItem mailItem);
+	
+	/**
+	 * Finds out the number of delivered mail items
+	 * @return Number of delivered mail items
+	 */
+	int getDeliveredNum();
     
 }

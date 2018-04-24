@@ -9,3 +9,4 @@
 - Fixed Magic Numbers (They're now in the properties file)
 - Edited the StorageTube Constructor to allow multiple Tube sizes (But still need to be defined in-code for now)
 - Will probably fix the coding style to be more... Consistent
+- Moved and Refactored ReportDelivery() as it makes no sense to use the interface then lock the instance inside the simulation code.
