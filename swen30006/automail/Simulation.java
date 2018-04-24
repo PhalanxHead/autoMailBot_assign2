@@ -21,42 +21,15 @@ public class Simulation {
     private static int MAIL_TO_CREATE;
     private static ArrayList<MailItem> MAIL_DELIVERED;
     private static double total_score = 0;
-
-	public static Properties amProperties;
     
     public static void main(String[] args) throws IOException {
-
-    	/* Instantiate Properties */
-    	amProperties = new Properties();
-		FileReader inStream = null;
-		
-		try {
-			inStream = new FileReader("automail.properties");
-			amProperties.load(inStream);
-			
-		/* No File? */
-		} catch(FileNotFoundException e) {
-			e.printStackTrace();
-			System.err.printf("ERROR: Properties File not found!");
-			
-		/* Something worrisome this way comes*/
-		} catch(Exception e) {
-			e.printStackTrace();
-			System.err.printf("ERROR: Something is wrong");
-			
-		} finally {
-			 if (inStream != null) {
-	                inStream.close();
-            }
-		}
-
 
         MAIL_DELIVERED = new ArrayList<MailItem>();
        
         /* Removed seedMap as was wasteful  */
     	
         Automail automail = new Automail(new ReportDelivery());
-        MAIL_TO_CREATE = Integer.parseInt(amProperties.getProperty("Mail_to_Create"));
+        MAIL_TO_CREATE = Integer.parseInt(MyProps.getProp("Mail_to_Create"));
         MailGenerator generator = new MailGenerator(MAIL_TO_CREATE, automail.mailPool);
         
         /** Initiate all the mail */
@@ -105,7 +78,7 @@ public class Simulation {
     
     private static double calculateDeliveryScore(MailItem deliveryItem) {
     	// Penalty for longer delivery times
-    	final double penalty = Double.parseDouble(amProperties.getProperty("Delivery_Penalty"));
+    	final double penalty = Double.parseDouble(MyProps.getProp("Delivery_Penalty"));
     	double priority_weight = 0;
         // Take (delivery time - arrivalTime)**penalty * (1+sqrt(priority_weight))
     	if(deliveryItem instanceof PriorityMailItem){

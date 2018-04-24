@@ -4,6 +4,7 @@ import java.util.*;
 
 import automail.Building;
 import automail.MailItem;
+import automail.MyProps;
 import automail.PriorityMailItem;
 import automail.Simulation;
 import automail.StorageTube;
@@ -13,7 +14,7 @@ public class WeakStrongMailPool implements IMailPool{
 	private LinkedList<MailItem> upper;  // weak robot will take this set
 	private LinkedList<MailItem> lower;  // strong robot will take this set
 	private int divider;
-	private static final int MAX_WEIGHT = Integer.parseInt(Simulation.amProperties.getProperty("Weak_Max_Weight"));
+	private static final int MAX_WEIGHT = Integer.parseInt(MyProps.getProp("Weak_Max_Weight"));
 
 	public WeakStrongMailPool(){
 		// Start empty
