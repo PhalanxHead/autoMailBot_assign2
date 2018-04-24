@@ -150,10 +150,10 @@ public class MailGenerator {
     public PriorityMailItem step(){
     	PriorityMailItem priority = null;
     	// Check if there are any mail to create
-        if(this.allMail.containsKey(Clock.Time())){
-            for(MailItem mailItem : allMail.get(Clock.Time())){
+        if(this.allMail.containsKey(Clock.time())){
+            for(MailItem mailItem : allMail.get(Clock.time())){
             	if (mailItem instanceof PriorityMailItem) priority = ((PriorityMailItem) mailItem);
-                System.out.printf("T: %3d > new addToPool [%s]%n", Clock.Time(), mailItem.toString());
+                System.out.printf("T: %3d > new addToPool [%s]%n", Clock.time(), mailItem.toString());
                 mailPool.addToPool(mailItem);
             }
         }

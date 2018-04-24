@@ -14,11 +14,9 @@ public class Robot {
     IRobotBehaviour behaviour;
     IMailDelivery delivery;
     protected final String id;
-    /** Possible states the robot can be in */
-    public enum RobotState { DELIVERING, WAITING, RETURNING }
-    public RobotState current_state;
-    private int current_floor;
-    private int destination_floor;
+    public RobotState currentState;
+    private int currentFloor;
+    private int destinationFloor;
     private IMailPool mailPool;
     private boolean strong;
     
@@ -38,8 +36,8 @@ public class Robot {
     public Robot(IRobotBehaviour behaviour, IMailDelivery delivery, IMailPool mailPool, boolean strong){
     	id = "R" + hashCode();
         // current_state = RobotState.WAITING;
-    	current_state = RobotState.RETURNING;
-        current_floor = Building.MAILROOM_LOCATION;
+    	currentState = RobotState.RETURNING;
+        currentFloor = Building.MAILROOM_LOCATION;
         /* Need to make this more extensible */
         tube = new StorageTube(Integer.parseInt(MyProps.getProp("Std_TubeSize")));
         this.behaviour = behaviour;
@@ -54,15 +52,15 @@ public class Robot {
      * @throws ExcessiveDeliveryException if robot delivers more than the capacity of the tube without refilling
      */
     public void step() throws ExcessiveDeliveryException, ItemTooHeavyException{    	
-    	switch(current_state) {
+    	switch(currentState) {
     		/** This state is triggered when the robot is returning to the mailroom after a delivery */
     		case RETURNING:
     			/** If its current position is at the mailroom, then the robot should change state */
-                if(current_floor == Building.MAILROOM_LOCATION){
+                if(currentFloor == Building.MAILROOM_LOCATION){
                 	while(!tube.isEmpty()) {
                 		MailItem mailItem = tube.pop();
                 		mailPool.addToPool(mailItem);
-                        System.out.printf("T: %3d > old addToPool [%s]%n", Clock.Time(), mailItem.toString());
+                        System.out.printf("T: %3d > old addToPool [%s]%n", Clock.time(), mailItem.toString());
                 	}
                 	changeState(RobotState.WAITING);
                 } else {
@@ -85,7 +83,7 @@ public class Robot {
     		case DELIVERING:
     			/** Check whether or not the call to return is triggered manually **/
     			boolean wantToReturn = behaviour.returnToMailRoom(tube);
-    			if(current_floor == destination_floor){ // If already here drop off either way
+    			if(currentFloor == destinationFloor){ // If already here drop off either way
                     /** Delivery complete, report this to the simulator! */
                     delivery.deliver(deliveryItem);
                     deliveryCounter++;
@@ -115,7 +113,7 @@ public class Robot {
 	    			}
 	    			else{*/
 	        			/** The robot is not at the destination yet, move towards it! */
-	                        moveTowards(destination_floor);
+	                        moveTowards(destinationFloor);
 	                /*
 	    			}
 	    			*/
@@ -132,7 +130,7 @@ public class Robot {
         deliveryItem = tube.pop();
         if (!strong && deliveryItem.weight > 2000) throw new ItemTooHeavyException(); 
         /** Set the destination floor */
-        destination_floor = deliveryItem.getDestFloor();
+        destinationFloor = deliveryItem.getDestFloor();
     }
 
     /**
@@ -140,11 +138,11 @@ public class Robot {
      * @param destination the floor towards which the robot is moving
      */
     private void moveTowards(int destination){
-        if(current_floor < destination){
-            current_floor++;
+        if(currentFloor < destination){
+            currentFloor++;
         }
         else{
-            current_floor--;
+            currentFloor--;
         }
     }
     
@@ -153,12 +151,12 @@ public class Robot {
      * @param nextState the state to which the robot is transitioning
      */
     private void changeState(RobotState nextState){
-    	if (current_state != nextState) {
-            System.out.printf("T: %3d > %11s changed from %s to %s%n", Clock.Time(), id, current_state, nextState);
+    	if (currentState != nextState) {
+            System.out.printf("T: %3d > %11s changed from %s to %s%n", Clock.time(), id, currentState, nextState);
     	}
-    	current_state = nextState;
+    	currentState = nextState;
     	if(nextState == RobotState.DELIVERING){
-            System.out.printf("T: %3d > %11s-> [%s]%n", Clock.Time(), id, deliveryItem.toString());
+            System.out.printf("T: %3d > %11s-> [%s]%n", Clock.time(), id, deliveryItem.toString());
     	}
     }
     

@@ -20,7 +20,7 @@ public class Simulation {
     /** Constant for the mail generator */
     private static int MAIL_TO_CREATE;
     private static ArrayList<MailItem> MAIL_DELIVERED;
-    private static double total_score = 0;
+    private static double totalScore = 0;
     
     public static void main(String[] args) throws IOException {
 
@@ -50,7 +50,7 @@ public class Simulation {
 				System.out.println("Simulation unable to complete.");
 				System.exit(0);
 			}
-            Clock.Tick();
+            Clock.tick();
         }
         printResults();
     }
@@ -60,10 +60,10 @@ public class Simulation {
     	/** Confirm the delivery and calculate the total score */
     	public void deliver(MailItem deliveryItem){
     		if(!MAIL_DELIVERED.contains(deliveryItem)){
-                System.out.printf("T: %3d > Delivered     [%s]%n", Clock.Time(), deliveryItem.toString());
+                System.out.printf("T: %3d > Delivered     [%s]%n", Clock.time(), deliveryItem.toString());
     			MAIL_DELIVERED.add(deliveryItem);
     			// Calculate delivery score
-    			total_score += calculateDeliveryScore(deliveryItem);
+    			totalScore += calculateDeliveryScore(deliveryItem);
     		}
     		else{
     			try {
@@ -84,12 +84,12 @@ public class Simulation {
     	if(deliveryItem instanceof PriorityMailItem){
     		priority_weight = ((PriorityMailItem) deliveryItem).getPriorityLevel();
     	}
-        return Math.pow(Clock.Time() - deliveryItem.getArrivalTime(),penalty)*(1+Math.sqrt(priority_weight));
+        return Math.pow(Clock.time() - deliveryItem.getArrivalTime(),penalty)*(1+Math.sqrt(priority_weight));
     }
 
     public static void printResults(){
-        System.out.println("T: "+Clock.Time()+" | Simulation complete!");
-        System.out.println("Final Delivery time: "+Clock.Time());
-        System.out.printf("Final Score: %.2f%n", total_score);
+        System.out.println("T: "+Clock.time()+" | Simulation complete!");
+        System.out.println("Final Delivery time: "+Clock.time());
+        System.out.printf("Final Score: %.2f%n", totalScore);
     }
 }
