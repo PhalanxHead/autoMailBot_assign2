@@ -48,77 +48,88 @@ public class Robot {
     /**
      * This is called on every time step
      * @throws ExcessiveDeliveryException if robot delivers more than the capacity of the tube without refilling
+     * @throws ItemTooHeavyException is the robot can't lift the item in its tube
      */
-    public void step() throws ExcessiveDeliveryException, ItemTooHeavyException{    	
+    public void step() throws ExcessiveDeliveryException, ItemTooHeavyException {    	
     	switch(currentState) {
     		/** This state is triggered when the robot is returning to the mailroom after a delivery */
     		case RETURNING:
-    			/** If its current position is at the mailroom, then the robot should change state */
-                if(currentFloor == Building.MAILROOM_LOCATION){
-                	while(!tube.isEmpty()) {
-                		MailItem mailItem = tube.pop();
-                		mailPool.addToPool(mailItem);
-                        System.out.printf("T: %3d > old addToPool [%s]%n", Clock.time(), mailItem.toString());
-                	}
-                	changeState(RobotState.WAITING);
+    			/* If its current position is at the mailroom, then the robot 
+    			   should complete its returning tasks and change state */
+                if(currentFloor == Building.MAILROOM_LOCATION) {
+                	onReturn();
+                
                 } else {
                 	/** If the robot is not at the mailroom floor yet, then move towards it! */
                     moveTowards(Building.MAILROOM_LOCATION);
                 	break;
                 }
+                
+            /** This case is triggered when the robot is in the mailRoom */
     		case WAITING:
     			/** Tell the sorter the robot is ready */
     			tube.fillStorageTube(strong);
                 /** If the StorageTube is ready and the Robot is waiting in the mailroom then start the delivery */
-                if(!tube.isEmpty()){
+                if(!tube.isEmpty()) {
                 	deliveryCounter = 0; // reset delivery counter
         			behaviour.startDelivery();
         			setRoute();
                 	changeState(RobotState.DELIVERING);
                 }
                 break;
+                
+            /* This state is triggered when the robot is out delivering mail */
     		case DELIVERING:
-    			/** Check whether or not the call to return is triggered manually **/
-    			boolean wantToReturn = behaviour.returnToMailRoom(tube);
-    			if(currentFloor == destinationFloor){ // If already here drop off either way
-                    /** Delivery complete, report this to the simulator! */
-                    delivery.deliver(deliveryItem);
-                    deliveryCounter++;
-                    if(deliveryCounter > 4){
-                    	throw new ExcessiveDeliveryException();
-                    }
-                    /** Check if want to return or if there are more items in the tube*/
-                    if(wantToReturn || tube.isEmpty()){
-                    // if(tube.isEmpty()){
-                    	changeState(RobotState.RETURNING);
-                    }
-                    else{
-                        /** If there are more items, set the robot's route to the location to deliver the item */
-                        setRoute();
-                        changeState(RobotState.DELIVERING);
-                    }
-    			} else
-    			{/*
-	    			if(wantToReturn){
-	    				// Put the item we are trying to deliver back
-	    				try {
-							tube.addItem(deliveryItem);
-						} catch (TubeFullException e) {
-							e.printStackTrace();
-						}
-	    				changeState(RobotState.RETURNING);
-	    			}
-	    			else{*/
-	        			/** The robot is not at the destination yet, move towards it! */
-	                        moveTowards(destinationFloor);
-	                /*
-	    			}
-	    			*/
-    			}
+    			deliverSteps();
                 break;
     	}
     }
 
+    /**
+     * Completes the steps to deliver the items in the tube.
+     * @throws ExcessiveDeliveryException
+     * @throws ItemTooHeavyException
+     */
+	private void deliverSteps() throws ExcessiveDeliveryException, ItemTooHeavyException {
+		/** Check whether or not the call to return is triggered manually **/
+		boolean wantToReturn = behaviour.returnToMailRoom(tube);
+		if(currentFloor == destinationFloor){ // If already here drop off either way
+		    /** Delivery complete, report this to the simulator! */
+		    delivery.deliver(deliveryItem);
+		    deliveryCounter++;
+		    if(deliveryCounter > 4){
+		    	throw new ExcessiveDeliveryException();
+		    }
+		    /** Check if want to return or if there are more items in the tube*/
+		    if(wantToReturn || tube.isEmpty()) {
+		    	changeState(RobotState.RETURNING);
+		    
+		    } else {
+		        /** If there are more items, set the robot's route to the location to deliver the item */
+		        setRoute();
+		        changeState(RobotState.DELIVERING);
+		    }
+		    
+		} else {
+			/* There was code to put the item back in the tube and 
+			   head to the mail room but it slowed the system down */
+            moveTowards(destinationFloor);
+		    
+		}
+	}
+
+	/**
+	 * Completes the steps to be taken on return to the mailRoom
+	 */
+    private void onReturn() {
+    	while(!tube.isEmpty()) {
+    		MailItem mailItem = tube.pop();
+    		mailPool.addToPool(mailItem);
+            System.out.printf("T: %3d > old addToPool [%s]%n", Clock.time(), mailItem.toString());
+    	}
+    	changeState(RobotState.WAITING);
+    }
+    
     /**
      * Sets the route for the robot
      */

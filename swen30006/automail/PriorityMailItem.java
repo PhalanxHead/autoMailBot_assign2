@@ -5,9 +5,12 @@ public class PriorityMailItem extends MailItem{
 	/** The priority of the mail item from 1 low to 100 high */
     private final int PRIORITY_LEVEL;
     
-	public PriorityMailItem(int dest_floor, int arrival_time, int weight, int priority_level) {
-		super(dest_floor, arrival_time, weight);
-        this.PRIORITY_LEVEL = priority_level;
+	public PriorityMailItem(int destFloor, int arrivalTime, int weight, int priorityLevel) {
+		super.destinationFloor = destFloor;
+        super.id = String.valueOf(hashCode());
+        super.arrivalTime = arrivalTime;
+        super.weight = weight;
+        this.PRIORITY_LEVEL = priorityLevel;
 	}
 	
     /**

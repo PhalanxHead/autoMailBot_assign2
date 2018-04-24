@@ -10,9 +10,9 @@ public interface IMailPool {
 	
 	/**
      * Adds an item to the mail pool
-     * @param mailItem the mail item being added.
+     * @param stdMailItem the mail item being added.
      */
-    void addToPool(MailItem mailItem);
+    void addToPool(MailItem MailItem);
 	
 	/**
 	 * Gets an item from the mail pool

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import automail.Clock;
 import automail.IMailDelivery;
 import automail.MailItem;
+import automail.StdMailItem;
 import automail.Simulation;
 import exceptions.MailAlreadyDeliveredException;
 

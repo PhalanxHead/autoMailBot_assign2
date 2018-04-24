@@ -50,18 +50,18 @@ public class MailGenerator {
      * @return a new mail item that needs to be delivered
      */
     private MailItem generateMail(){
-        int dest_floor = generateDestinationFloor();
-        int priority_level = generatePriorityLevel();
-        int arrival_time = generateArrivalTime();
+        int destFloor = generateDestinationFloor();
+        int priorityLevel = generatePriorityLevel();
+        int arrivalTime = generateArrivalTime();
         int weight = generateWeight();
         // Check if arrival time has a priority mail
         if(	(random.nextInt(6) > 0) ||  // Skew towards non priority mail
-        	(allMail.containsKey(arrival_time) &&
-        	allMail.get(arrival_time).stream().anyMatch(e -> PriorityMailItem.class.isInstance(e))))
+        	(allMail.containsKey(arrivalTime) &&
+        	allMail.get(arrivalTime).stream().anyMatch(e -> PriorityMailItem.class.isInstance(e))))
         {
-        	return new MailItem(dest_floor,arrival_time,weight);      	
+        	return new StdMailItem(destFloor,arrivalTime,weight);      	
         } else {
-        	return new PriorityMailItem(dest_floor,arrival_time,weight,priority_level);
+        	return new PriorityMailItem(destFloor,arrivalTime,weight,priorityLevel);
         }   
     }
 

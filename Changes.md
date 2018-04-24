@@ -12,3 +12,6 @@
 - Moved and Refactored ReportDelivery() as it makes no sense to use the interface then lock the instance inside the simulation code.
 - Moved the Interface classes to the automail package as it seemed to make more sense there (And implementations can live in "Strategies" package)
 - Decoupled StorageTube from MailRoom by implementing a getMail() and moving fillTube() to the StorageTube Class.
+- Robot.step() Looked pretty convoluted so I separated it into smaller more cohesive sub-methods.
+- Refactored the MailItem class into an abstract class
+- Should we have a robot factory?

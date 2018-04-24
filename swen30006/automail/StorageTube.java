@@ -28,7 +28,7 @@ public class StorageTube {
      */
 	void fillStorageTube(boolean strong) {
 		/* Determine max weight for the tube via the properties file */
-		int maxWeight = strong ? Integer.parseInt(MyProps.getProp("Max_Weight")) : Integer.parseInt(MyProps.getProp("Weak_Max_Weight"));
+		int maxWeight = strong ? Integer.parseInt(MyProps.getProp("Weight_Max")) : Integer.parseInt(MyProps.getProp("Weak_Weight_Max"));
 		MailItem curItem;
 		
 		try{

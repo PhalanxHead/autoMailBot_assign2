@@ -5,6 +5,7 @@ import java.util.*;
 import automail.Building;
 import automail.IMailPool;
 import automail.MailItem;
+import automail.StdMailItem;
 import automail.MyProps;
 import automail.PriorityMailItem;
 import automail.Simulation;
@@ -12,15 +13,15 @@ import automail.StorageTube;
 import exceptions.TubeFullException;
 
 public class WeakStrongMailPool implements IMailPool{
-	private LinkedList<MailItem> upper;  // weak robot will take this set
-	private LinkedList<MailItem> lower;  // strong robot will take this set
+	private LinkedList<MailItem> lighter;  // weak robot will take this set
+	private LinkedList<MailItem> heavier;  // strong robot will take this set
 	private int divider;
-	private static final int MAX_WEIGHT = Integer.parseInt(MyProps.getProp("Weak_Max_Weight"));
+	private static final int WEAK_MAX_WEIGHT = Integer.parseInt(MyProps.getProp("Weak_Weight_Max"));
 
 	public WeakStrongMailPool(){
 		// Start empty
-		upper = new LinkedList<MailItem>();
-		lower = new LinkedList<MailItem>();
+		lighter = new LinkedList<MailItem>();
+		heavier = new LinkedList<MailItem>();
 		divider = Building.FLOORS / 2;  // Top normal floor for strong robot
 	}
 
@@ -32,10 +33,10 @@ public class WeakStrongMailPool implements IMailPool{
 		// This doesn't attempt to put the re-add items back in time order but there will be relatively few of them,
 		// from the strong robot only, and only when it is recalled with undelivered items.
 		// Check whether mailItem is for strong robot
-		if (mailItem instanceof PriorityMailItem || mailItem.getWeight() > MAX_WEIGHT || mailItem.getDestFloor() <= divider) {
+		if (mailItem instanceof PriorityMailItem || mailItem.getWeight() > WEAK_MAX_WEIGHT || mailItem.getDestFloor() <= divider) {
 			if (mailItem instanceof PriorityMailItem) {  // Add in priority order
 				int priority = ((PriorityMailItem) mailItem).getPriorityLevel();
-				ListIterator<MailItem> i = lower.listIterator();
+				ListIterator<MailItem> i = heavier.listIterator();
 				while (i.hasNext()) {
 					if (priority(i.next()) < priority) {
 						i.previous();
@@ -45,10 +46,10 @@ public class WeakStrongMailPool implements IMailPool{
 				}
 			}
 			
-			lower.addLast(mailItem); // Just add it on the end of the lower (strong robot) list
+			heavier.addLast(mailItem); // Just add it on the end of the lower (strong robot) list
 			
 		} else{
-			upper.addLast(mailItem); // Just add it on the end of the upper (weak robot) list
+			lighter.addLast(mailItem); // Just add it on the end of the upper (weak robot) list
 		}
 	}
 	
@@ -56,11 +57,11 @@ public class WeakStrongMailPool implements IMailPool{
 	public MailItem getMail(int maxWeight) {
 		
 		try {
-			if((maxWeight > Integer.parseInt(MyProps.getProp("Weak_Max_Weight"))) && (upper.size() > 0)) {
-				return upper.remove();
+			if((maxWeight > WEAK_MAX_WEIGHT) && (heavier.size() > 0)) {
+				return heavier.remove();
 				
-			} else if(lower.size() > 0) {
-				return lower.remove();
+			} else if(lighter.size() > 0) {
+				return lighter.remove();
 				
 			} else {
 				return null;
