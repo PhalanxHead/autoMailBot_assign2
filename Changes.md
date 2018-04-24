@@ -10,3 +10,5 @@
 - Edited the StorageTube Constructor to allow multiple Tube sizes (But still need to be defined in-code for now)
 - Will probably fix the coding style to be more... Consistent
 - Moved and Refactored ReportDelivery() as it makes no sense to use the interface then lock the instance inside the simulation code.
+- Moved the Interface classes to the automail package as it seemed to make more sense there (And implementations can live in "Strategies" package)
+- Decoupled StorageTube from MailRoom by implementing a getMail() and moving fillTube() to the StorageTube Class.

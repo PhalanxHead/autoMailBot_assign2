@@ -1,6 +1,4 @@
-package strategies;
-
-import automail.StorageTube;
+package automail;
 
 public interface IRobotBehaviour {
 	

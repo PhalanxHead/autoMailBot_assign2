@@ -2,8 +2,6 @@ package automail;
 
 import exceptions.ExcessiveDeliveryException;
 import exceptions.ItemTooHeavyException;
-import strategies.IMailPool;
-import strategies.IRobotBehaviour;
 
 /**
  * The robot delivers mail!
@@ -39,7 +37,7 @@ public class Robot {
     	currentState = RobotState.RETURNING;
         currentFloor = Building.MAILROOM_LOCATION;
         /* Need to make this more extensible */
-        tube = new StorageTube(Integer.parseInt(MyProps.getProp("Std_TubeSize")));
+        tube = new StorageTube(Integer.parseInt(MyProps.getProp("Std_TubeSize")), mailPool);
         this.behaviour = behaviour;
         this.delivery = delivery;
         this.mailPool = mailPool;
@@ -70,8 +68,7 @@ public class Robot {
                 }
     		case WAITING:
     			/** Tell the sorter the robot is ready */
-    			mailPool.fillStorageTube(tube, strong);
-                // System.out.println("Tube total size: "+tube.getTotalOfSizes());
+    			tube.fillStorageTube(strong);
                 /** If the StorageTube is ready and the Robot is waiting in the mailroom then start the delivery */
                 if(!tube.isEmpty()){
                 	deliveryCounter = 0; // reset delivery counter

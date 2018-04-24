@@ -1,7 +1,4 @@
-package strategies;
-
-import automail.MailItem;
-import automail.StorageTube;
+package automail;
 
 /**
  * addToPool is called when there are mail items newly arrived at the building to add to the MailPool or
@@ -16,11 +13,12 @@ public interface IMailPool {
      * @param mailItem the mail item being added.
      */
     void addToPool(MailItem mailItem);
-    
-    /**
-     * @param tube refers to the pack the robot uses to deliver mail.
-     * @param strong is whether the tube belongs to a strong robot.
-     */
-	void fillStorageTube(StorageTube tube, boolean strong);
+	
+	/**
+	 * Gets an item from the mail pool
+	 * @param maxWeight The maximum weight of the desired package)
+	 * @return A mail Item meeting specifications.
+	 */
+	MailItem getMail(int maxWeight);
     
 }

@@ -1,5 +1,6 @@
 package strategies;
 import automail.Clock;
+import automail.IRobotBehaviour;
 import automail.MailItem;
 import automail.PriorityMailItem;
 import automail.StorageTube;

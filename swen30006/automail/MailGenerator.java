@@ -2,8 +2,6 @@ package automail;
 
 import java.util.*;
 
-import strategies.IMailPool;
-
 /**
  * This class generates the mail.
  * Constants in this class are based on observations of typical mail arrivals

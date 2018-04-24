@@ -18,21 +18,20 @@ public class Simulation {
 
     /** Constant for the mail generator */
     private static int MAIL_TO_CREATE;
-    static double totalScore = 0;
-    private static IMailDelivery delivery = new ReportDelivery();
+    public static double totalScore = 0;
     
     public static void main(String[] args) throws IOException {
        
         /* Removed seedMap as was wasteful  */
     	
-        Automail automail = new Automail(delivery);
+        Automail automail = new Automail();
         MAIL_TO_CREATE = Integer.parseInt(MyProps.getProp("Mail_to_Create"));
         MailGenerator generator = new MailGenerator(MAIL_TO_CREATE, automail.mailPool);
         
         /** Initiate all the mail */
         generator.generateAllMail();
         PriorityMailItem priority;
-        while(delivery.getDeliveredNum() != generator.MAIL_TO_CREATE) {
+        while(automail.delivery.getDeliveredNum() != generator.MAIL_TO_CREATE) {
         	//System.out.println("-- Step: "+Clock.Time());
             priority = generator.step();
             if (priority != null) {
@@ -52,7 +51,7 @@ public class Simulation {
         printResults();
     }
     
-    static double calculateDeliveryScore(MailItem deliveryItem) {
+    public static double calculateDeliveryScore(MailItem deliveryItem) {
     	// Penalty for longer delivery times
     	final double penalty = Double.parseDouble(MyProps.getProp("Delivery_Penalty"));
     	double priority_weight = 0;

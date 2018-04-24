@@ -1,7 +1,11 @@
-package automail;
+package strategies;
 
 import java.util.ArrayList;
 
+import automail.Clock;
+import automail.IMailDelivery;
+import automail.MailItem;
+import automail.Simulation;
 import exceptions.MailAlreadyDeliveredException;
 
 

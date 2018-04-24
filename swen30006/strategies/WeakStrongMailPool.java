@@ -3,6 +3,7 @@ package strategies;
 import java.util.*;
 
 import automail.Building;
+import automail.IMailPool;
 import automail.MailItem;
 import automail.MyProps;
 import automail.PriorityMailItem;
@@ -43,24 +44,31 @@ public class WeakStrongMailPool implements IMailPool{
 					}
 				}
 			}
+			
 			lower.addLast(mailItem); // Just add it on the end of the lower (strong robot) list
-		}
-		else{
+			
+		} else{
 			upper.addLast(mailItem); // Just add it on the end of the upper (weak robot) list
 		}
 	}
 	
 	@Override
-	public void fillStorageTube(StorageTube tube, boolean strong) {
-		Queue<MailItem> q = strong ? lower : upper;
-		try{
-			while(!tube.isFull() && !q.isEmpty()) {
-				tube.addItem(q.remove());  // Could group/order by floor taking priority into account - but already better than simple
+	public MailItem getMail(int maxWeight) {
+		
+		try {
+			if((maxWeight > Integer.parseInt(MyProps.getProp("Weak_Max_Weight"))) && (upper.size() > 0)) {
+				return upper.remove();
+				
+			} else if(lower.size() > 0) {
+				return lower.remove();
+				
+			} else {
+				return null;
 			}
-		}
-		catch(TubeFullException e){
+		} catch(Exception e) {
+			/* Something weird went wrong */
 			e.printStackTrace();
+			return null;
 		}
 	}
-
 }
