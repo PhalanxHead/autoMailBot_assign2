@@ -1,3 +1,11 @@
+/*
+ *  Authors: Group 62
+ *  Luke Hedt, Marzuk Amin, William Dean
+ *  Date: 20/04/2018
+ *
+ *  Solution to Part B of the Software Modelling and Design 2018 Project
+ */
+
 package automail;
 
 /**
@@ -10,9 +18,9 @@ public interface IMailPool {
 	
 	/**
      * Adds an item to the mail pool
-     * @param stdMailItem the mail item being added.
+     * @param mailItem the mail item being added.
      */
-    void addToPool(MailItem MailItem);
+    void addToPool(MailItem mailItem);
 	
 	/**
 	 * Gets an item from the mail pool

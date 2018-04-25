@@ -1,3 +1,11 @@
+/*
+ *  Authors: Group 62
+ *  Luke Hedt, Marzuk Amin, William Dean
+ *  Date: 20/04/2018
+ *
+ *  Solution to Part B of the Software Modelling and Design 2018 Project
+ */
+
 package automail;
 
 import java.util.*;
@@ -29,8 +37,7 @@ public class MailGenerator {
     public MailGenerator(int mailToCreate, IMailPool mailPool){
     	/* I don't particularly like this solution, but it works. */
     	try {
-    		this.random = new Random(
-    				Long.parseLong(MyProps.getProp("Seed")) );
+    		this.random = new Random(MyProps.getLongProp("Seed"));
     		
     	} catch(Exception e) {
     		
@@ -76,8 +83,8 @@ public class MailGenerator {
      * @return a random priority level selected from 10 and 100
      */
     private int generatePriorityLevel(){
-    	final Integer LOW_PRI = Integer.parseInt(MyProps.getProp("Low_Priority"));
-    	final Integer HI_PRI = Integer.parseInt(MyProps.getProp("High_Priority"));
+    	final Integer LOW_PRI = MyProps.getIntProp("Low_Priority");
+    	final Integer HI_PRI = MyProps.getIntProp("High_Priority");
     	
         return random.nextInt(4) > 0 ? LOW_PRI : HI_PRI;
     }
@@ -86,9 +93,9 @@ public class MailGenerator {
      * @return a random weight
      */
     private int generateWeight(){
-    	final double mean = Double.parseDouble(MyProps.getProp("Normal_Weight"));
-    	final double stddev = Double.parseDouble(MyProps.getProp("Weight_Stdev"));
-    	final int MAX = Integer.parseInt(MyProps.getProp("Weight_Max"));
+    	final double mean = MyProps.getDoubleProp("Normal_Weight");
+    	final double stddev = MyProps.getDoubleProp("Weight_Stdev");
+    	final int MAX = MyProps.getIntProp("Weight_Max");
     	double base = random.nextGaussian();
     	if (base < 0) base = -base;
     	int weight = (int) (mean + base * stddev);

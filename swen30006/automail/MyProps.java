@@ -1,3 +1,11 @@
+/*
+ *  Authors: Group 62
+ *  Luke Hedt, Marzuk Amin, William Dean
+ *  Date: 20/04/2018
+ *
+ *  Solution to Part B of the Software Modelling and Design 2018 Project
+ */
+
 package automail;
 
 import java.io.FileInputStream;
@@ -32,7 +40,19 @@ public class MyProps extends Properties {
         return instance;
     }
     
-    public static String getProp(String s) {
+    public static Integer getIntProp(String s) {
+    	return Integer.parseInt(MyProps.getInstance().getProperty(s));
+    }
+    
+    public static Double getDoubleProp(String s) {
+    	return Double.parseDouble(MyProps.getInstance().getProperty(s));
+    }
+    
+    public static Long getLongProp(String s) {
+    	return Long.parseLong(MyProps.getInstance().getProperty(s));
+    }
+    
+    public static String getStrProp(String s) {
     	return MyProps.getInstance().getProperty(s);
     }
 }

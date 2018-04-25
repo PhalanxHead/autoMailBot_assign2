@@ -1,3 +1,11 @@
+/*
+ *  Authors: Group 62
+ *  Luke Hedt, Marzuk Amin, William Dean
+ *  Date: 20/04/2018
+ *
+ *  Solution to Part B of the Software Modelling and Design 2018 Project
+ */
+
 package automail;
 
 // import exceptions.RobotNotInMailRoomException;
@@ -24,11 +32,9 @@ public class StorageTube {
     }
 
     /**
-     * @param strong is whether the tube belongs to a strong robot.
+     * @param maxWeight is the maximum weight the robot can lift
      */
-	void fillStorageTube(boolean strong) {
-		/* Determine max weight for the tube via the properties file */
-		int maxWeight = strong ? Integer.parseInt(MyProps.getProp("Weight_Max")) : Integer.parseInt(MyProps.getProp("Weak_Weight_Max"));
+	void fillStorageTube(int maxWeight) {
 		MailItem curItem;
 		
 		try{
@@ -41,10 +47,9 @@ public class StorageTube {
 					break;
 				}
 			}
-		}
-		catch(TubeFullException e){
-			e.printStackTrace();
 			
+		} catch(TubeFullException e) {
+			e.printStackTrace();
 		}
 	}
     

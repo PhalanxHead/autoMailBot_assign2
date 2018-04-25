@@ -1,3 +1,11 @@
+/*
+ *  Authors: Group 62
+ *  Luke Hedt, Marzuk Amin, William Dean
+ *  Date: 20/04/2018
+ *
+ *  Solution to Part B of the Software Modelling and Design 2018 Project
+ */
+
 package automail;
 
 import exceptions.ExcessiveDeliveryException;
@@ -25,7 +33,7 @@ public class Simulation {
         /* Removed seedMap as was wasteful  */
     	
         Automail automail = new Automail();
-        MAIL_TO_CREATE = Integer.parseInt(MyProps.getProp("Mail_to_Create"));
+        MAIL_TO_CREATE = MyProps.getIntProp("Mail_to_Create");
         MailGenerator generator = new MailGenerator(MAIL_TO_CREATE, automail.mailPool);
         
         /** Initiate all the mail */
@@ -53,7 +61,7 @@ public class Simulation {
     
     public static double calculateDeliveryScore(MailItem deliveryItem) {
     	// Penalty for longer delivery times
-    	final double penalty = Double.parseDouble(MyProps.getProp("Delivery_Penalty"));
+    	final double penalty = MyProps.getDoubleProp("Delivery_Penalty");
     	double priority_weight = 0;
         // Take (delivery time - arrivalTime)**penalty * (1+sqrt(priority_weight))
     	if(deliveryItem instanceof PriorityMailItem){

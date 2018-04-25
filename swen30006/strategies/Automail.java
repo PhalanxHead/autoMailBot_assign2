@@ -1,8 +1,17 @@
+/*
+ *  Authors: Group 62
+ *  Luke Hedt, Marzuk Amin, William Dean
+ *  Date: 20/04/2018
+ *
+ *  Solution to Part B of the Software Modelling and Design 2018 Project
+ */
+
 package strategies;
 
 import automail.IMailDelivery;
 import automail.IMailPool;
 import automail.IRobotBehaviour;
+import automail.MyProps;
 import automail.Robot;
 
 public class Automail {
@@ -24,12 +33,13 @@ public class Automail {
     	// Can handle any weight that arrives at the building
     	boolean strong = true; 
     	
-    	IRobotBehaviour robotBehaviourW = new MyRobotBehaviour(weak);
-    	IRobotBehaviour robotBehaviourS = new MyRobotBehaviour(strong);
+    	IRobotBehaviour robotBehaviourW = new MyRobotBehaviour(MyProps.getIntProp("Weak_Weight_Max"));
+    	IRobotBehaviour robotBehaviourS = new MyRobotBehaviour(MyProps.getIntProp("Weight_Max"));
     	    	
     	/** Initialize robot */
-    	robot1 = new Robot(robotBehaviourW, delivery, mailPool, weak); /* shared behaviour because identical and stateless */
-    	robot2 = new Robot(robotBehaviourS, delivery, mailPool, strong);
+    	/* shared behaviour because identical and stateless */
+    	robot1 = new WeakRobot(robotBehaviourW, delivery, mailPool, MyProps.getIntProp("Weak_Weight_Max")); 
+    	robot2 = new StrongRobot(robotBehaviourS, delivery, mailPool, MyProps.getIntProp("Weight_Max"));
     }
     
 }

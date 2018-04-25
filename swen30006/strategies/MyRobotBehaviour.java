@@ -1,17 +1,26 @@
+/*
+ *  Authors: Group 62
+ *  Luke Hedt, Marzuk Amin, William Dean
+ *  Date: 20/04/2018
+ *
+ *  Solution to Part B of the Software Modelling and Design 2018 Project
+ */
+
 package strategies;
 import automail.Clock;
 import automail.IRobotBehaviour;
 import automail.MailItem;
+import automail.MyProps;
 import automail.PriorityMailItem;
 import automail.StorageTube;
 
 public class MyRobotBehaviour implements IRobotBehaviour {
 	
-	private boolean strong;
+	private int maxWeight;
 	private int newPriority; // Used if we are notified that a priority item has arrived. 
 		
-	public MyRobotBehaviour(boolean strong) {
-		this.strong = strong;
+	public MyRobotBehaviour(int maxWeight) {
+		this.maxWeight = maxWeight;
 		newPriority = 0;
 	}
 	
@@ -36,7 +45,7 @@ public class MyRobotBehaviour implements IRobotBehaviour {
 		} else {
 			// Return true for the strong robot if the one waiting is higher priority than the one we have
 			// Assumes that the one at the top of the tube has the highest priority
-			return strong && newPriority > tubePriority(tube);
+			return (maxWeight > MyProps.getIntProp("Weak_Weight_Max")) && newPriority > tubePriority(tube);
 		}
 	}
 	
