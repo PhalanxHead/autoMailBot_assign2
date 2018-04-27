@@ -24,7 +24,7 @@ public class WeakStrongMailPool implements IMailPool{
 	private LinkedList<MailItem> upper;  // weak robot will take this set
 	private LinkedList<MailItem> lower;  // strong robot will take this set
 	private int divider;
-	private static final int WEAK_MAX_WEIGHT = MyProps.getIntProp("Weak_Weight_Max");
+	private static final int WEAK_WEIGHT_MAX = MyProps.WEAK_WEIGHT_MAX;
 
 	public WeakStrongMailPool(){
 		// Start empty
@@ -36,14 +36,14 @@ public class WeakStrongMailPool implements IMailPool{
 	private int priority(MailItem m) {
 		return (m instanceof PriorityMailItem) ? ((PriorityMailItem) m).getPriorityLevel() : 0;
 	}
-	
+
 	@Override
 	public void addToPool(MailItem mailItem) {
 		// This doesn't attempt to put the re-add items back in time order but there will be relatively few of them,
 		// from the strong robot only, and only when it is recalled with undelivered items.
-		
+
 		// Check whether mailItem is for strong robot
-		if (mailItem instanceof PriorityMailItem || mailItem.getWeight() > WEAK_MAX_WEIGHT || mailItem.getDestFloor() <= divider) {
+		if (mailItem instanceof PriorityMailItem || mailItem.getWeight() > WEAK_WEIGHT_MAX || mailItem.getDestFloor() <= divider) {
 			if (mailItem instanceof PriorityMailItem) {  // Add in priority order
 				int priority = ((PriorityMailItem) mailItem).getPriorityLevel();
 				ListIterator<MailItem> i = lower.listIterator();
@@ -55,24 +55,24 @@ public class WeakStrongMailPool implements IMailPool{
 					}
 				}
 			}
-			
+
 			lower.addLast(mailItem); // Just add it on the end of the lower (strong robot) list
-			
+
 		} else{
 			upper.addLast(mailItem); // Just add it on the end of the upper (weak robot) list
 		}
 	}
-	
+
 	@Override
 	public MailItem getMail(int maxWeight) {
-		
+
 		try {
-			if((maxWeight > WEAK_MAX_WEIGHT) && (lower.size() > 0)) {
+			if((maxWeight > WEAK_WEIGHT_MAX) && (lower.size() > 0)) {
 				return lower.remove();
-				
+
 			} else if(upper.size() > 0) {
 				return upper.remove();
-				
+
 			} else {
 				return null;
 			}

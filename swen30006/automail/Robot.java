@@ -30,21 +30,21 @@ public abstract class Robot {
 	 * @throws ExcessiveDeliveryException if robot delivers more than the capacity of the tube without refilling
 	 * @throws ItemTooHeavyException is the robot can't lift the item in its tube
 	 */
-	public void step() throws ExcessiveDeliveryException, ItemTooHeavyException {    	
+	public void step() throws ExcessiveDeliveryException, ItemTooHeavyException {
 		switch(currentState) {
 			/** This state is triggered when the robot is returning to the mailroom after a delivery */
 			case RETURNING:
-				/* If its current position is at the mailroom, then the robot 
+				/* If its current position is at the mailroom, then the robot
 				   should complete its returning tasks and change state */
 	            if(currentFloor == Building.MAILROOM_LOCATION) {
 	            	onReturn();
-	            
+
 	            } else {
 	            	/** If the robot is not at the mailroom floor yet, then move towards it! */
 	                moveTowards(Building.MAILROOM_LOCATION);
 	            	break;
 	            }
-	            
+
 	        /** This case is triggered when the robot is in the mailRoom */
 			case WAITING:
 				/** Tell the sorter the robot is ready */
@@ -57,7 +57,7 @@ public abstract class Robot {
 	            	changeState(RobotState.DELIVERING);
 	            }
 	            break;
-	            
+
 	        /* This state is triggered when the robot is out delivering mail */
 			case DELIVERING:
 				deliverSteps();
@@ -77,24 +77,24 @@ public abstract class Robot {
 		    /** Delivery complete, report this to the simulator! */
 		    delivery.deliver(deliveryItem);
 		    deliveryCounter++;
-		    if(deliveryCounter > 4){
+		    if(deliveryCounter > tube.MAXIMUM_CAPACITY){
 		    	throw new ExcessiveDeliveryException();
 		    }
 		    /** Check if want to return or if there are more items in the tube*/
 		    if(wantToReturn || tube.isEmpty()) {
 		    	changeState(RobotState.RETURNING);
-		    
+
 		    } else {
 		        /** If there are more items, set the robot's route to the location to deliver the item */
 		        setRoute();
 		        changeState(RobotState.DELIVERING);
 		    }
-		    
+
 		} else {
-			/* There was code to put the item back in the tube and 
+			/* There was code to put the item back in the tube and
 			   head to the mail room but it slowed the system down */
 	        moveTowards(destinationFloor);
-		    
+
 		}
 	}
 
@@ -116,7 +116,7 @@ public abstract class Robot {
 	private void setRoute() throws ItemTooHeavyException {
 	    /** Pop the item from the StorageUnit */
 	    deliveryItem = tube.pop();
-	    if (deliveryItem.weight > maxWeight) throw new ItemTooHeavyException(); 
+	    if (deliveryItem.weight > maxWeight) throw new ItemTooHeavyException();
 	    /** Set the destination floor */
 	    destinationFloor = deliveryItem.getDestFloor();
 	}

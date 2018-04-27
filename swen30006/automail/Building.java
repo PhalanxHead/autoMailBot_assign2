@@ -9,15 +9,15 @@
 package automail;
 
 public class Building {
-	
-	
+
+
     /** The number of floors in the building **/
     public static final int FLOORS = MyProps.getIntProp("Number_of_Floors");
-    
+
     /** Represents the ground floor location */
-    public static final int LOWEST_FLOOR = MyProps.getIntProp("Lowest_Floor");
-    
+    public static final int LOWEST_FLOOR = MyProps.LOWEST_FLOOR;
+
     /** Represents the mailroom location (Note an out of range floor might break the solution) */
-    public static final int MAILROOM_LOCATION = MyProps.getIntProp("Mailroom_Floor");
+    public static final int MAILROOM_LOCATION = MyProps.MAILROOM_FLOOR;
 
 }

@@ -15,29 +15,29 @@ import automail.PriorityMailItem;
 import automail.StorageTube;
 
 public class MyRobotBehaviour implements IRobotBehaviour {
-	
+
 	private int maxWeight;
-	private int newPriority; // Used if we are notified that a priority item has arrived. 
-		
+	private int newPriority; // Used if we are notified that a priority item has arrived.
+
 	public MyRobotBehaviour(int maxWeight) {
 		this.maxWeight = maxWeight;
 		newPriority = 0;
 	}
-	
+
 	public void startDelivery() {
 		newPriority = 0;
 	}
-	
+
 	@Override
     public void priorityArrival(int priority, int weight) {
     	if (priority > newPriority) newPriority = priority;  // Only the strong robot will deliver priority items so weight of no interest
     }
- 
+
 	private int tubePriority(StorageTube tube) {  // Assumes at least one item in tube
 		MailItem item = tube.peek();
 		return (item instanceof PriorityMailItem) ? ((PriorityMailItem) item).getPriorityLevel() : 0;
 	}
-	
+
 	@Override
 	public boolean returnToMailRoom(StorageTube tube) {
 		if (tube.isEmpty()) {
@@ -45,8 +45,8 @@ public class MyRobotBehaviour implements IRobotBehaviour {
 		} else {
 			// Return true for the strong robot if the one waiting is higher priority than the one we have
 			// Assumes that the one at the top of the tube has the highest priority
-			return (maxWeight > MyProps.getIntProp("Weak_Weight_Max")) && newPriority > tubePriority(tube);
+			return (maxWeight > MyProps.WEAK_WEIGHT_MAX) && newPriority > tubePriority(tube);
 		}
 	}
-	
+
 }

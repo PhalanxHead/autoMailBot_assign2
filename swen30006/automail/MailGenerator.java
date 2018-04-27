@@ -22,7 +22,7 @@ public class MailGenerator {
 
     private Random random;
     /** This seed is used to make the behaviour deterministic */
-    
+
     private boolean complete;
     private IMailPool mailPool;
 
@@ -38,12 +38,12 @@ public class MailGenerator {
     	/* I don't particularly like this solution, but it works. */
     	try {
     		this.random = new Random(MyProps.getLongProp("Seed"));
-    		
+
     	} catch(Exception e) {
-    		
+
     		this.random = new Random();
     	}
-    	
+
         // Vary arriving mail by +/-20%. I don't like this
         MAIL_TO_CREATE = mailToCreate*4/5 + random.nextInt(mailToCreate*2/5);
         // System.out.println("Num Mail Items: "+MAIL_TO_CREATE);
@@ -66,10 +66,10 @@ public class MailGenerator {
         	(allMail.containsKey(arrivalTime) &&
         	allMail.get(arrivalTime).stream().anyMatch(e -> PriorityMailItem.class.isInstance(e))))
         {
-        	return new StdMailItem(destFloor,arrivalTime,weight);      	
+        	return new StdMailItem(destFloor,arrivalTime,weight);
         } else {
         	return new PriorityMailItem(destFloor,arrivalTime,weight,priorityLevel);
-        }   
+        }
     }
 
     /**
@@ -83,25 +83,25 @@ public class MailGenerator {
      * @return a random priority level selected from 10 and 100
      */
     private int generatePriorityLevel(){
-    	final Integer LOW_PRI = MyProps.getIntProp("Low_Priority");
-    	final Integer HI_PRI = MyProps.getIntProp("High_Priority");
-    	
+    	final Integer LOW_PRI = MyProps.LOW_PRIORITY;
+    	final Integer HI_PRI = MyProps.HIGH_PRIORITY;
+
         return random.nextInt(4) > 0 ? LOW_PRI : HI_PRI;
     }
-    
+
     /**
      * @return a random weight
      */
     private int generateWeight(){
-    	final double mean = MyProps.getDoubleProp("Normal_Weight");
-    	final double stddev = MyProps.getDoubleProp("Weight_Stdev");
-    	final int MAX = MyProps.getIntProp("Weight_Max");
+    	final double mean = MyProps.NORMAL_WEIGHT;
+    	final double stddev = MyProps.STDEV_WEIGHT;
+    	final int MAX = MyProps.WEIGHT_MAX;
     	double base = random.nextGaussian();
     	if (base < 0) base = -base;
     	int weight = (int) (mean + base * stddev);
         return weight > MAX ? MAX : weight;
     }
-    
+
     /**
      * @return a random arrival time before the last delivery time
      */
@@ -147,7 +147,7 @@ public class MailGenerator {
         }
 
     }
-    
+
     /**
      * While there are steps left, create a new mail item to deliver
      * @return Priority
@@ -164,5 +164,5 @@ public class MailGenerator {
         }
         return priority;
     }
-    
+
 }

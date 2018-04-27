@@ -22,7 +22,7 @@ import automail.*;
  * The robot delivers mail!
  */
 public class WeakRobot extends Robot {
-    
+
     /**
      * Initiates the robot's location at the start to be at the mailroom
      * also set it to be waiting for mail.
@@ -37,13 +37,13 @@ public class WeakRobot extends Robot {
     	currentState = RobotState.RETURNING;
         currentFloor = Building.MAILROOM_LOCATION;
         /* Need to make this more extensible */
-        tube = new StorageTube(MyProps.getIntProp("Std_TubeSize"), mailPool);
+        tube = new StorageTube(MyProps.STD_TUBESIZE, mailPool);
         this.behaviour = behaviour;
         this.delivery = delivery;
         this.mailPool = mailPool;
         this.maxWeight = maxWeight;
         this.deliveryCounter = 0;
     }
-    
+
 
 }

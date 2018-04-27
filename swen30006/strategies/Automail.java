@@ -15,31 +15,31 @@ import automail.MyProps;
 import automail.Robot;
 
 public class Automail {
-	      
+
     public Robot robot1, robot2;
     public IMailPool mailPool;
     public IMailDelivery delivery;
-    
+
     public Automail() {
     	/* Initialize the MailPool */
     	mailPool = new WeakStrongMailPool();
-    	
+
     	/* Initialise the delivery */
     	delivery = new ReportDelivery();
-    	
+
         /* Initialize the RobotAction */
     	// Can't handle more than 2000 grams
     	boolean weak = false;
     	// Can handle any weight that arrives at the building
-    	boolean strong = true; 
-    	
-    	IRobotBehaviour robotBehaviourW = new MyRobotBehaviour(MyProps.getIntProp("Weak_Weight_Max"));
-    	IRobotBehaviour robotBehaviourS = new MyRobotBehaviour(MyProps.getIntProp("Weight_Max"));
-    	    	
+    	boolean strong = true;
+
+    	IRobotBehaviour robotBehaviourW = new MyRobotBehaviour(MyProps.WEAK_WEIGHT_MAX);
+    	IRobotBehaviour robotBehaviourS = new MyRobotBehaviour(MyProps.WEIGHT_MAX);
+
     	/** Initialize robot */
     	/* shared behaviour because identical and stateless */
-    	robot1 = new WeakRobot(robotBehaviourW, delivery, mailPool, MyProps.getIntProp("Weak_Weight_Max")); 
-    	robot2 = new StrongRobot(robotBehaviourS, delivery, mailPool, MyProps.getIntProp("Weight_Max"));
+    	robot1 = new WeakRobot(robotBehaviourW, delivery, mailPool, MyProps.WEAK_WEIGHT_MAX);
+    	robot2 = new StrongRobot(robotBehaviourS, delivery, mailPool, MyProps.WEIGHT_MAX);
     }
-    
+
 }
